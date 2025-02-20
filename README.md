@@ -5,28 +5,21 @@ This repo contains a RAG-powered chatbot that answers subject-specific questions
 The project is structured as follows:
 
 rag.py: Implements the RAG-powered chatbot using Flask, GPT-4o-mini, FAISS, and HuggingFace embeddings. It processes text extracted from PPTs and retrieves relevant answers.
+
 index.html: Provides a simple front-end with HTML, CSS, and JavaScript for user interaction with the chatbot.
 # How to Prepare to Run
 Prerequisites
 Install Python 3.7 or higher.
 Set up an OpenAI API key.
+
 Install required dependencies:
-bash
-Copy
-Edit
 pip install -r requirements.txt
 # How to Run
 Clone the repository:
-bash
-Copy
-Edit
 git clone https://github.com/your-repo-name.git
 cd your-repo-name
 Install dependencies as mentioned above.
 Run the Flask application:
-bash
-Copy
-Edit
 python rag.py
 Open http://127.0.0.1:5000/ in your browser to access the chatbot.
 
