@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBMS Course Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    #chat-container {
+      width: 350px;
+      max-width: 100%;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    #messages {
+      height: 300px;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+    }
+    .message {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 8px;
+      background-color: #f1f1f1;
+      max-width: 80%;
+    }
+    .message.user {
+      background-color: #4CAF50;
+      color: white;
+      align-self: flex-end;
+    }
+    .message.bot {
+      background-color: #ddd;
+      color: black;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="messages"></div>
+    <input type="text" id="user-input" placeholder="Ask me something..." />
+    <button id="send-btn">Send</button>
+  </div>
+
+  <script>
+    document.getElementById('send-btn').addEventListener('click', async () => {
+      const userInput = document.getElementById('user-input').value;
+      if (!userInput.trim()) return;
+
+      // Display the user's message
+      displayMessage(userInput, 'user');
+
+      // Call the backend API to get the bot's response
+      const response = await getBotResponse(userInput);
+
+      // Display the bot's response
+      displayMessage(response, 'bot');
+    });
+
+    async function getBotResponse(query) {
+      try {
+        // Send query to Flask API
+        const response = await fetch(`http://127.0.0.1:5000/chat?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        // If response contains an error, show that; otherwise, display the response
+        if (data.error) {
+          return "Sorry, I couldn't process your request.";
+        } else {
+          return data.response || "I couldn't understand that.";
+        }
+      } catch (error) {
+        return "Error: Unable to get response from the server.";
+      }
+    }
+
+    function displayMessage(message, sender) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', sender);
+      messageElement.textContent = message;
+
+      document.getElementById('messages').appendChild(messageElement);
+      document.getElementById('user-input').value = '';
+      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+  </script>
+</body>
+</html>
